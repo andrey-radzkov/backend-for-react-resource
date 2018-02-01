@@ -50,8 +50,8 @@ public class FirebaseController {
                         .setTag(new Date().toString())
                         .setIcon("https://kz.all.biz/img/kz/catalog/670883.jpeg")
                         .setColor("#aa0000")
-                        .setClickAction("https://localhost:3000/redux-form") //TODO: domain to enviroment-dependent config
-                        .setSound("https://localhost:3000/notificationSound.mp3")
+                        .setClickAction("https://temp-react-for-heroku.herokuapp.com/redux-form") //TODO: domain to enviroment-dependent config
+                        .setSound("https://temp-react-for-heroku.herokuapp.com/notificationSound.mp3")
                         .build();
                 fcmClient.send(new NotificationMulticastMessage(options, Lists.newArrayList(token), payload));
                 //TODO: to jms, handle exception
