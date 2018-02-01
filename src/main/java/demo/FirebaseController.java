@@ -6,6 +6,7 @@ import de.bytefish.fcmjava.model.options.FcmMessageOptions;
 import de.bytefish.fcmjava.requests.notification.NotificationMulticastMessage;
 import de.bytefish.fcmjava.requests.notification.NotificationPayload;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,8 @@ public class FirebaseController {
     private FcmSettings fcmSettings;
 
     private FcmClient fcmClient;
+    @Value("${notification.domain:}")
+    private String notificationDomain;
 
     @PostConstruct
     public void init() {
@@ -50,8 +53,8 @@ public class FirebaseController {
                         .setTag(new Date().toString())
                         .setIcon("https://kz.all.biz/img/kz/catalog/670883.jpeg")
                         .setColor("#aa0000")
-                        .setClickAction("https://temp-react-for-heroku.herokuapp.com/redux-form") //TODO: domain to enviroment-dependent config
-                        .setSound("https://temp-react-for-heroku.herokuapp.com/notificationSound.mp3")
+                        .setClickAction(notificationDomain + "/redux-form") //TODO: domain to enviroment-dependent config
+                        .setSound(notificationDomain + "/notificationSound.mp3")
                         .build();
                 fcmClient.send(new NotificationMulticastMessage(options, Lists.newArrayList(token), payload));
                 //TODO: to jms, handle exception
