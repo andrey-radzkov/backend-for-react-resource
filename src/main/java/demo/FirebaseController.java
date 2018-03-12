@@ -76,6 +76,7 @@ public class FirebaseController {
         NotificationPayload payload = NotificationPayload.builder()
                 .setTitle("Buyer MTZ sent a message")
                 .setBody(body)
+                .setBadge("http://otv.by/uploads/posts/2011-11/1321218780_kolenval.jpg")
                 .setTag(new Date().toString())
                 .setIcon("https://kz.all.biz/img/kz/catalog/670883.jpeg")
                 .setColor("#aa0000")
