@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.bytefish.fcmjava.client.FcmClient;
 import de.bytefish.fcmjava.model.options.FcmMessageOptions;
+import de.bytefish.fcmjava.requests.data.DataMulticastMessage;
 import de.bytefish.fcmjava.requests.notification.NotificationMulticastMessage;
 import de.bytefish.fcmjava.requests.notification.NotificationPayload;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +84,7 @@ public class FirebaseController {
                 .setClickAction(notificationDomain + "/redux-form") //TODO: domain to enviroment-dependent config
                 .setSound(notificationDomain + "/notificationSound.mp3")
                 .build();
-        fcmClient.send(new NotificationMulticastMessage(options, tokens, payload));
+        fcmClient.send(new DataMulticastMessage(options, tokens, payload));
     }
 
 
