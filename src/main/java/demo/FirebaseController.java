@@ -5,8 +5,6 @@ import com.google.common.collect.Sets;
 import de.bytefish.fcmjava.client.FcmClient;
 import de.bytefish.fcmjava.model.options.FcmMessageOptions;
 import de.bytefish.fcmjava.requests.data.DataMulticastMessage;
-import de.bytefish.fcmjava.requests.notification.NotificationMulticastMessage;
-import de.bytefish.fcmjava.requests.notification.NotificationPayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.IntStream;
 
@@ -73,18 +69,20 @@ public class FirebaseController {
         FcmMessageOptions options = FcmMessageOptions.builder()
                 .setTimeToLive(Duration.ofHours(1))
                 .build();
-        String body = "New connect " + value + " with MAZ activated";
-        NotificationPayload payload = NotificationPayload.builder()
-                .setTitle("Buyer MTZ sent a message")
-                .setBody(body)
-                .setBadge("http://otv.by/uploads/posts/2011-11/1321218780_kolenval.jpg")
-                .setTag(new Date().toString())
-                .setIcon("https://kz.all.biz/img/kz/catalog/670883.jpeg")
-                .setColor("#aa0000")
-                .setClickAction(notificationDomain + "/redux-form") //TODO: domain to enviroment-dependent config
-                .setSound(notificationDomain + "/notificationSound.mp3")
-                .build();
-        fcmClient.send(new DataMulticastMessage(options, tokens, payload));
+        Map<String, Object> notification = new HashMap<>();
+        notification.put("title", "Buyer MTZ sent a message");
+        notification.put("body", "New connect " + value + " with MAZ activated");
+        notification.put("badge", "http://otv.by/uploads/posts/2011-11/1321218780_kolenval.jpg");
+        notification.put("tag", new Date().toString());
+        notification.put("icon", "https://kz.all.biz/img/kz/catalog/670883.jpeg");
+        notification.put("image", "http://agrotorg.net/imgs/board/6/114366-1.jpg");
+        notification.put("color", "#aa0000");
+        notification.put("clickAction", notificationDomain + "/redux-form");
+        notification.put("sound", notificationDomain + "/notificationSound.mp3");
+        HashMap<String, String> data = new HashMap<>();
+        data.put("action", notificationDomain + "/redux-form");
+        notification.put("data", data);
+        fcmClient.send(new DataMulticastMessage(options, tokens, notification));
     }
 
 
