@@ -20,7 +20,6 @@ import java.util.stream.IntStream;
  * @author Radzkov Andrey
  */
 @RestController
-
 public class SupplierController {
 
     private final CopyOnWriteArrayList<SseEmitter> emitters = new CopyOnWriteArrayList<>();
