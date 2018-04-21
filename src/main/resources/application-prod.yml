@@ -1,0 +1,7 @@
+notification:
+    domain: https://temp-react-for-heroku.herokuapp.com
+logging:
+    level:
+        org:
+            springframework:
+                security: ERROR
