@@ -1,7 +1,8 @@
-package demo;
+package com.radzkov.resource.controller.v1;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.radzkov.resource.config.FcmSettings;
 import de.bytefish.fcmjava.client.FcmClient;
 import de.bytefish.fcmjava.model.options.FcmMessageOptions;
 import de.bytefish.fcmjava.requests.data.DataMulticastMessage;

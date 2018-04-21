@@ -1,11 +1,11 @@
-package demo;
+package com.radzkov.resource.entity;
 
 import java.util.UUID;
 
 /**
  * @author Radzkov Andrey
  */
-class Message {
+public class Message {
 
     private String id = UUID.randomUUID().toString();
     private String content;

@@ -1,4 +1,4 @@
-package demo;
+package com.radzkov.resource.config;
 
 import de.bytefish.fcmjava.http.options.IFcmClientSettings;
 import org.springframework.beans.factory.annotation.Value;
