@@ -6,7 +6,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
 
     <changeSet id="21.04.2018 19:32" author="a.radzkov">
-        <createTable tableName="users" >
+        <createTable tableName="users">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" unique="true" nullable="false"/>
             </column>
@@ -16,5 +16,38 @@
 
         </createTable>
 
+    </changeSet>
+
+    <changeSet id="21.04.2018 21:97" author="a.radzkov">
+        <!--TODO: add constraints-->
+        <addColumn tableName="users">
+            <column name="basket_id" type="int"/>
+        </addColumn>
+
+        <createTable tableName="basket">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="clothes_items">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="int"/>
+            <column name="type_id" type="int"/>
+            <column name="basket_id" type="int"/>
+        </createTable>
+        <createTable tableName="clothes_types">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="type" type="varchar(255)"/>
+        </createTable>
+
+    </changeSet>
+    <changeSet id="21.04.2018 21:37" author="a.radzkov">
+        <addColumn tableName="clothes_types">
+            <column name="img_src" type="varchar(1000)"/>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>

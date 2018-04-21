@@ -8,8 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
@@ -17,20 +15,20 @@ import javax.persistence.Table;
  * @author Radzkov Andrey
  */
 @Entity
-@Table(name = "users")
+@Table(name = "clothes_types")
 @Getter
 @Setter
-public class User {
+public class ClothesType {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
     @Column
-    private String username;
+    private String type;
 
-    @ManyToOne
-    @JoinColumn(name = "basket_id")
-    private Basket basket;
+    @Column
+    private String imgSrc;
+
 
 }

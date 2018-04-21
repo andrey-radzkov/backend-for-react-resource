@@ -1,7 +1,6 @@
 package com.radzkov.resource.controller.v1;
 
 import com.google.common.collect.Maps;
-import com.radzkov.resource.entity.Message;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,7 +63,7 @@ public class SupplierController {
         List<SseEmitter> deadEmitters = new ArrayList<>();
         emitters.forEach(emitter -> {
             try {
-                emitter.send(new Message("pushed message from server"));
+                emitter.send("pushed message from server");
             } catch (Exception e) {
                 deadEmitters.add(emitter);
             }

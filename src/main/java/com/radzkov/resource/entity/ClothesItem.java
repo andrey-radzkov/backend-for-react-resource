@@ -12,22 +12,26 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
 /**
  * @author Radzkov Andrey
  */
 @Entity
-@Table(name = "users")
+@Table(name = "clothes_items")
 @Getter
 @Setter
-public class User {
+public class ClothesItem {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
-    private String username;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User owner;
+
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private ClothesType type;
 
     @ManyToOne
     @JoinColumn(name = "basket_id")

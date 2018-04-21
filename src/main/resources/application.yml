@@ -29,7 +29,7 @@ spring:
     datasource:
         driver-class-name: com.mysql.jdbc.Driver
         password: root
-        url: jdbc:mysql://localhost/android_backend2
+        url: jdbc:mysql://localhost/wash
         username: root
     jpa:
         database-platform: org.hibernate.dialect.MySQLDialect
