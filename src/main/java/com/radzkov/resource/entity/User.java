@@ -1,5 +1,6 @@
 package com.radzkov.resource.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,6 +32,7 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "basket_id")
+    @JsonIgnore
     private Basket basket;
 
 }

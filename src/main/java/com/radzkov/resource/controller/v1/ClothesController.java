@@ -1,7 +1,9 @@
 package com.radzkov.resource.controller.v1;
 
+import com.radzkov.resource.entity.Basket;
 import com.radzkov.resource.entity.ClothesItem;
 import com.radzkov.resource.entity.User;
+import com.radzkov.resource.repository.BasketRepository;
 import com.radzkov.resource.repository.ClothesItemRepository;
 import com.radzkov.resource.repository.UserRepository;
 import com.radzkov.resource.service.SecurityService;
@@ -22,6 +24,8 @@ public class ClothesController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private BasketRepository basketRepository;
+    @Autowired
     private SecurityService securityService;
 
     @PostMapping("/put-clothes-to-basket")
@@ -37,5 +41,13 @@ public class ClothesController {
     public List<ClothesItem> getMyClothes() {
         String username = securityService.getUsernameFromAuthentication();
         return clothesItemRepository.findAllByOwnerUsername(username);
+    }
+
+    @GetMapping("/my-basket")
+    public Basket getMyBasket() {
+        String username = securityService.getUsernameFromAuthentication();
+        User currentUser = userRepository.findUserByUsername(username);
+        //TODO: in one query
+        return basketRepository.findBasketByBasketOwnersIs(currentUser);
     }
 }
