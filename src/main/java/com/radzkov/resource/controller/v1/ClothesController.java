@@ -2,10 +2,8 @@ package com.radzkov.resource.controller.v1;
 
 import com.radzkov.resource.entity.Basket;
 import com.radzkov.resource.entity.ClothesItem;
-import com.radzkov.resource.entity.User;
 import com.radzkov.resource.repository.BasketRepository;
 import com.radzkov.resource.repository.ClothesItemRepository;
-import com.radzkov.resource.repository.UserRepository;
 import com.radzkov.resource.service.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,19 +20,21 @@ public class ClothesController {
     @Autowired
     private ClothesItemRepository clothesItemRepository;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private BasketRepository basketRepository;
     @Autowired
     private SecurityService securityService;
 
     @PostMapping("/put-clothes-to-basket")
     public void putClothes() {
+        //TODO: get type from request, validate if no clothes by type
+        String socks = "socks";
         String username = securityService.getUsernameFromAuthentication();
-        ClothesItem clothesItem = new ClothesItem();
-        User currentUser = userRepository.findUserByUsername(username);
-        clothesItem.setOwner(currentUser);
-        clothesItemRepository.save(clothesItem);
+        ClothesItem clothesItem = clothesItemRepository.findFirstByOwnerUsernameAndTypeTypeAndBasketIsNull(username, socks);
+        if (clothesItem != null) {
+            Basket myBasket = basketRepository.findBasketByBasketOwnersUsername(username);
+            clothesItem.setBasket(myBasket);
+            clothesItemRepository.save(clothesItem);
+        }
     }
 
     @GetMapping("/my-clothes")
@@ -46,8 +46,6 @@ public class ClothesController {
     @GetMapping("/my-basket")
     public Basket getMyBasket() {
         String username = securityService.getUsernameFromAuthentication();
-        User currentUser = userRepository.findUserByUsername(username);
-        //TODO: in one query
-        return basketRepository.findBasketByBasketOwnersIs(currentUser);
+        return basketRepository.findBasketByBasketOwnersUsername(username);
     }
 }

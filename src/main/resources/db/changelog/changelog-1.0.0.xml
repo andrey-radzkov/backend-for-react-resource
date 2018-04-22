@@ -50,4 +50,18 @@
             <column name="img_src" type="varchar(1000)"/>
         </addColumn>
     </changeSet>
+    <changeSet id="22.04.2018 18:03" author="a.radzkov">
+        <insert tableName="clothes_types">
+            <column name="type">socks</column>
+        </insert>
+        <insert tableName="clothes_types">
+            <column name="type">t-shirt</column>
+        </insert>
+        <insert tableName="clothes_types">
+            <column name="type">trousers</column>
+        </insert>
+        <insert tableName="clothes_types">
+            <column name="type">others</column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

@@ -10,4 +10,5 @@ import java.util.List;
  */
 public interface ClothesItemRepository extends EntityRepository<ClothesItem> {
     List<ClothesItem> findAllByOwnerUsername(String username);
+    ClothesItem findFirstByOwnerUsernameAndTypeTypeAndBasketIsNull(String username,String type);
 }

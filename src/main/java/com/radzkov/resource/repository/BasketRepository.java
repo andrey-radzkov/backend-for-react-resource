@@ -8,5 +8,5 @@ import com.radzkov.resource.entity.User;
  * @author Radzkov Andrey
  */
 public interface BasketRepository extends EntityRepository<Basket> {
-    Basket findBasketByBasketOwnersIs(User currentUser);
+    Basket findBasketByBasketOwnersUsername(String username);
 }
