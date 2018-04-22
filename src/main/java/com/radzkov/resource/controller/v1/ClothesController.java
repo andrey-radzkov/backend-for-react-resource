@@ -48,4 +48,16 @@ public class ClothesController {
         String username = securityService.getUsernameFromAuthentication();
         return basketRepository.findBasketByBasketOwnersUsername(username);
     }
+
+    @PostMapping("/wash-clothes-in-basket")
+    public void washClothesInBasket() {
+        //TODO: read clothes types and count from query
+        //TODO: уведомление о стирке другому владельцу корзины
+        String username = securityService.getUsernameFromAuthentication();
+        Basket myBasket = basketRepository.findBasketByBasketOwnersUsername(username);
+        myBasket.getDirtyClothes().parallelStream().forEach(item -> {
+            item.setBasket(null);
+        });
+        basketRepository.save(myBasket);
+    }
 }
