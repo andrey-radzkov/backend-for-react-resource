@@ -51,12 +51,11 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        // @formatter:off
-        http
-                .requestMatchers().antMatchers("/**")
-                .and()
-                .authorizeRequests().anyRequest().access("#oauth2.hasScope('resource-read')");
-        // @formatter:on
+        http.antMatcher("/**")
+                .authorizeRequests()
+                .antMatchers("/localization/*").permitAll()
+                .antMatchers("/**").access("#oauth2.hasScope('resource-read')")
+        ;
     }
 
     @Override

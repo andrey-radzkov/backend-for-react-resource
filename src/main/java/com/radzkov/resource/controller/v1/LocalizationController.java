@@ -21,6 +21,7 @@ public class LocalizationController {
 
     @PostConstruct
     public void init() {
+        //TODO: reloadable
         messages = new HashMap<>();
         messages.put("en", ResourceBundle.getBundle("messages", Locale.ENGLISH));
         messages.put("ru", ResourceBundle.getBundle("messages", new Locale("ru")));
