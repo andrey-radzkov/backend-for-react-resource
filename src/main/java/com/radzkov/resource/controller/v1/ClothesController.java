@@ -1,5 +1,6 @@
 package com.radzkov.resource.controller.v1;
 
+import com.radzkov.resource.dto.TypeQuery;
 import com.radzkov.resource.entity.Basket;
 import com.radzkov.resource.entity.ClothesItem;
 import com.radzkov.resource.repository.BasketRepository;
@@ -8,13 +9,16 @@ import com.radzkov.resource.service.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
  * @author Radzkov Andrey
  */
+
 @RestController
 public class ClothesController {
     @Autowired
@@ -24,12 +28,10 @@ public class ClothesController {
     @Autowired
     private SecurityService securityService;
 
-    @PostMapping("/put-clothes-to-basket")
-    public void putClothes() {
-        //TODO: get type from request, validate if no clothes by type
-        String socks = "socks";
+    @PostMapping(value = "/put-clothes-to-basket")
+    public void putClothes(@RequestBody @Valid TypeQuery type) {
         String username = securityService.getUsernameFromAuthentication();
-        ClothesItem clothesItem = clothesItemRepository.findFirstByOwnerUsernameAndTypeTypeAndBasketIsNull(username, socks);
+        ClothesItem clothesItem = clothesItemRepository.findFirstByOwnerUsernameAndTypeTypeAndBasketIsNull(username, type.getType());
         if (clothesItem != null) {
             Basket myBasket = basketRepository.findBasketByBasketOwnersUsername(username);
             clothesItem.setBasket(myBasket);

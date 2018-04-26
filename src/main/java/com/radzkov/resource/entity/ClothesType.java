@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -24,6 +25,7 @@ public class ClothesType {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
+    @NotNull
     @Column
     private String type;
 
