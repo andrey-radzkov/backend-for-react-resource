@@ -52,7 +52,7 @@ public class ClothesController {
     public List<ClothesItem> getCleanClothes(@AuthenticationPrincipal Object principal) {
 
         String username = securityService.getUsernameFromAuthentication();
-        return clothesItemRepository.findAllByOwnerUsername(username);
+        return clothesItemRepository.findAllByOwnerUsernameAndBasketIsNull(username);
     }
 
     @GetMapping("/my-basket")
