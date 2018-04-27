@@ -1,6 +1,14 @@
 package com.radzkov.resource.controller.v1;
 
 import com.radzkov.resource.dto.TypeQuery;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.radzkov.resource.entity.Basket;
 import com.radzkov.resource.entity.ClothesItem;
 import com.radzkov.resource.repository.BasketRepository;
@@ -12,26 +20,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.AllArgsConstructor;
 import javax.validation.Valid;
 import java.util.List;
 
 /**
  * @author Radzkov Andrey
  */
-
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 @RestController
 public class ClothesController {
-    @Autowired
-    private ClothesItemRepository clothesItemRepository;
-    @Autowired
-    private BasketRepository basketRepository;
-    @Autowired
-    private SecurityService securityService;
+
+    private final ClothesItemRepository clothesItemRepository;
+    private final BasketRepository basketRepository;
+    private final SecurityService securityService;
 
     @PostMapping(value = "/put-clothes-to-basket")
     public void putClothes(@RequestBody @Valid TypeQuery type) {
         String username = securityService.getUsernameFromAuthentication();
         ClothesItem clothesItem = clothesItemRepository.findFirstByOwnerUsernameAndTypeTypeAndBasketIsNull(username, type.getType());
+        ClothesItem clothesItem = clothesItemRepository
+                .findFirstByOwnerUsernameAndTypeTypeAndBasketIsNull(username, socks);
         if (clothesItem != null) {
             Basket myBasket = basketRepository.findBasketByBasketOwnersUsername(username);
             clothesItem.setBasket(myBasket);
@@ -39,14 +48,23 @@ public class ClothesController {
         }
     }
 
-    @GetMapping("/my-clothes")
-    public List<ClothesItem> getMyClothes() {
+    @GetMapping("/all-clothes")
+    public List<ClothesItem> getAllClothes() {
+
         String username = securityService.getUsernameFromAuthentication();
         return clothesItemRepository.findAllByOwnerUsername(username);
     }
 
+    @GetMapping("/clean-clothes")
+    public List<ClothesItem> getCleanClothes(@AuthenticationPrincipal Object principal) {
+
+        String username = securityService.getUsernameFromAuthentication();
+        return clothesItemRepository.findAllByOwnerUsernameAndBasketIsNull(username);
+    }
+
     @GetMapping("/my-basket")
     public Basket getMyBasket() {
+
         String username = securityService.getUsernameFromAuthentication();
         return basketRepository.findBasketByBasketOwnersUsername(username);
     }
