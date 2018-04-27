@@ -3,6 +3,7 @@ package com.radzkov.resource.controller.v1;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,8 +41,15 @@ public class ClothesController {
         }
     }
 
-    @GetMapping("/my-clothes")
-    public List<ClothesItem> getMyClothes() {
+    @GetMapping("/all-clothes")
+    public List<ClothesItem> getAllClothes() {
+
+        String username = securityService.getUsernameFromAuthentication();
+        return clothesItemRepository.findAllByOwnerUsername(username);
+    }
+
+    @GetMapping("/clean-clothes")
+    public List<ClothesItem> getCleanClothes(@AuthenticationPrincipal Object principal) {
 
         String username = securityService.getUsernameFromAuthentication();
         return clothesItemRepository.findAllByOwnerUsername(username);
