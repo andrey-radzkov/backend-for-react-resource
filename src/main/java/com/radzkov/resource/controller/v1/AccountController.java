@@ -23,6 +23,7 @@ public class AccountController {
 
     @GetMapping("/register-if-necessary")
     public void registerIfNeccesary() {
+
         String username = securityService.getUsernameFromAuthentication();
         if (isUserNotExists(username)) {
             saveNewUser(username);
