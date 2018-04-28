@@ -1,5 +1,27 @@
 package com.radzkov.resource.controller.v1;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.radzkov.resource.config.FcmSettings;
+import com.radzkov.resource.entity.Subscription;
+import com.radzkov.resource.entity.User;
+import com.radzkov.resource.repository.SubscriptionRepository;
+import com.radzkov.resource.repository.UserRepository;
+import de.bytefish.fcmjava.client.FcmClient;
+import de.bytefish.fcmjava.model.options.FcmMessageOptions;
+import de.bytefish.fcmjava.requests.data.DataMulticastMessage;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.PostConstruct;
+import javax.validation.Valid;
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,31 +31,16 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.IntStream;
 
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.radzkov.resource.config.FcmSettings;
-
-import de.bytefish.fcmjava.client.FcmClient;
-import de.bytefish.fcmjava.model.options.FcmMessageOptions;
-import de.bytefish.fcmjava.requests.data.DataMulticastMessage;
-import lombok.RequiredArgsConstructor;
-
 /**
  * @author Radzkov Andrey
  */
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RestController
-public class FirebaseController {
+public class SubscriptionController {
 
     private final FcmSettings fcmSettings;
+    private final UserRepository userRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
     private FcmClient fcmClient;
 
@@ -46,6 +53,13 @@ public class FirebaseController {
     public void init() {
 
         fcmClient = new FcmClient(fcmSettings);
+    }
+
+    @PostMapping("/subscribe")
+    public void subscribe(@RequestBody @Valid Subscription subscription, @AuthenticationPrincipal String username) {
+        User subscribedUser = userRepository.findUserByUsername(username);
+        subscription.setUser(subscribedUser);
+        subscriptionRepository.save(subscription);
     }
 
     @GetMapping("/send-push-message/{token}")

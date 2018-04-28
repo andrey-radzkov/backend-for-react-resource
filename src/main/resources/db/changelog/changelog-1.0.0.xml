@@ -64,4 +64,13 @@
             <column name="type">others</column>
         </insert>
     </changeSet>
+    <changeSet id="28.04.2018 22:01" author="a.radzkov">
+        <createTable tableName="subscriptions">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="int"/>
+            <column name="token" type="varchar(1000)"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
