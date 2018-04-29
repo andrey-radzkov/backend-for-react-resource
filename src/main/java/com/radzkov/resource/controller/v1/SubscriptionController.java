@@ -13,6 +13,7 @@ import de.bytefish.fcmjava.requests.data.DataMulticastMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,6 +63,34 @@ public class SubscriptionController {
         subscriptionRepository.save(subscription);
     }
 
+    @Scheduled(fixedRateString = "${wash.required.scheduling}")
+    //tODO: stop
+    public void reportCurrentTime() {
+        //tODO: group by user, save info about messaging to prevent duplication
+        //tODO: notification in vacations
+        subscriptionRepository.findAll().forEach(subscription -> {
+            FcmMessageOptions options = FcmMessageOptions.builder()
+                    .setTimeToLive(Duration.ofHours(2))
+                    .build();
+            //TODO: select other basket owners first
+            Map<String, Object> notification = new HashMap<>();
+            notification.put("title", "Чистота и порядок");
+            notification.put("body", "У вас закончились чистые носки");
+            notification.put("badge", "https://opt-936833.ssl.1c-bitrix-cdn.ru/upload/iblock/f81/f81e13000e39381d3a42d4bcc0840f9d.png");
+            notification.put("tag", new Date().toString());
+            notification.put("icon", "https://opt-936833.ssl.1c-bitrix-cdn.ru/upload/iblock/f81/f81e13000e39381d3a42d4bcc0840f9d.png");
+            notification.put("image", "https://opt-936833.ssl.1c-bitrix-cdn.ru/upload/iblock/f81/f81e13000e39381d3a42d4bcc0840f9d.png");
+            notification.put("color", "#aa0000");
+            notification.put("clickAction", notificationDomain + "/my-basket");
+            notification.put("sound", notificationDomain + "/notificationSound.mp3");
+            HashMap<String, String> data = new HashMap<>();
+            data.put("action", notificationDomain + "/my-basket");
+            notification.put("data", data);
+            fcmClient.send(new DataMulticastMessage(options, Lists.newArrayList(subscription.getToken()), notification));
+
+        });
+    }
+
     @GetMapping("/send-push-message/{token}")
     public void sendPushMessageToCurrentToken(@PathVariable("token") String token) {
 
@@ -76,19 +105,6 @@ public class SubscriptionController {
                 e.printStackTrace();
             }
         }));
-    }
-
-    @GetMapping("/send-push-message-to-all/")
-    public void sendPushMessageToCurrentToken() {
-
-        CompletableFuture.runAsync(() -> {
-            try {
-                Thread.sleep(3000);
-                sendMessage(fcmClient, Lists.newArrayList(allTokens), 0);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
     }
 
     private void sendMessage(FcmClient fcmClient, List<String> tokens, int value) {

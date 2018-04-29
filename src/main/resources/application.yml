@@ -9,6 +9,9 @@ logging:
                 security: INFO
 notification:
     domain: http://localhost:3000
+wash:
+    required:
+        scheduling: 20000
 security:
     oauth2:
         resource:

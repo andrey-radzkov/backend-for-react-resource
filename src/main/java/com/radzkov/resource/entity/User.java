@@ -21,6 +21,8 @@ import javax.persistence.Table;
 @Table(name = "users")
 @Getter
 @Setter
+//TODO: save timezone
+//tODO: save options
 public class User {
     @Id
     @Column

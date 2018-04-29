@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
@@ -21,6 +22,7 @@ import org.springframework.util.StringUtils;
 @Configuration
 @EnableAutoConfiguration
 @EnableResourceServer
+@EnableScheduling
 @EnableJpaRepositories("com.radzkov.resource.repository")
 @EntityScan("com.radzkov.resource.entity")
 @ComponentScan("com.radzkov")

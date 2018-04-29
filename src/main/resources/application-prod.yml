@@ -1,5 +1,8 @@
 notification:
     domain: https://temp-react-for-heroku.herokuapp.com
+wash:
+    required:
+        scheduling: 1800000
 logging:
     level:
         org:
