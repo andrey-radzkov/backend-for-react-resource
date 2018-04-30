@@ -1,6 +1,5 @@
 package com.radzkov.resource.config;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -28,7 +27,6 @@ import org.springframework.util.StringUtils;
 @ComponentScan("com.radzkov")
 public class ResourceApplication extends ResourceServerConfigurerAdapter {
 
-    private static Logger LOG = Logger.getLogger(ResourceApplication.class);
     @Value("${security.oauth2.resource.tokenInfoUri:}")
     private String tokenInfoUri; //TODO: remove log
 
