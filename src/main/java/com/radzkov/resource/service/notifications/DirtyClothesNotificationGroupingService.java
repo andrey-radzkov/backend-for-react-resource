@@ -12,8 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -45,9 +47,14 @@ class DirtyClothesNotificationGroupingService {
         ListMultimap<User, TypeCountForSender> groupedByType = ArrayListMultimap.create();
         sendersForReceiver.entries().parallelStream().forEach(entry -> {
             User sender = entry.getValue();
-            List<ClothesItem> sendersCleanClothes = clothesItemRepository.findAllByOwnerUsernameAndBasketIsNull(sender.getUsername());
-            Map<ClothesType, Long> countByType = countOfClothesByType(sendersCleanClothes);
-            countByType.forEach((type, count) -> {
+            List<ClothesItem> sendersClothes = clothesItemRepository.findAllByOwnerUsername(sender.getUsername());
+            List<ClothesItem> sendersDirtyClothes = sendersClothes.parallelStream().filter(clothes -> Objects.nonNull(clothes.getBasket())).collect(Collectors.toList());
+            Map<ClothesType, Long> countByTypeAll = countOfClothesByType(sendersClothes);
+            Map<ClothesType, Long> countByTypeDirty = countOfClothesByType(sendersDirtyClothes);
+            Map<ClothesType, Long> countByTypeClean = new HashMap<>();
+            countByTypeAll.forEach((clothesType, count) -> countByTypeClean.put(clothesType, count - countByTypeDirty.get(clothesType)));
+
+            countByTypeClean.forEach((type, count) -> {
                 //TODO: read from options
                 if (count <= CRITICAL_MINIMUM) {
                     groupedByType.put(entry.getKey(), new TypeCountForSender(sender, type, count));
