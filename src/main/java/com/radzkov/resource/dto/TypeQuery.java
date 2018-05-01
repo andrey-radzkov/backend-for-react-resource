@@ -12,5 +12,5 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class TypeQuery {
     @NotNull
-    private String type;
+    private String name;
 }

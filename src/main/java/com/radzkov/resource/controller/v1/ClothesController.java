@@ -29,7 +29,7 @@ public class ClothesController {
 
     @PutMapping("/put-clothes-to-basket")
     public void putClothes(@RequestBody @Valid TypeQuery type, @AuthenticationPrincipal String username) {
-        ClothesItem clothesItem = clothesItemRepository.findFirstByOwnerUsernameAndTypeTypeAndBasketIsNull(username, type.getType());
+        ClothesItem clothesItem = clothesItemRepository.findFirstByOwnerUsernameAndTypeNameAndBasketIsNull(username, type.getName());
         if (clothesItem != null) {
             Basket myBasket = basketRepository.findBasketByBasketOwnersUsername(username);
             clothesItem.setBasket(myBasket);
@@ -57,9 +57,7 @@ public class ClothesController {
         //TODO: read clothes types and count from query
         //TODO: уведомление о стирке другому владельцу корзины
         Basket myBasket = basketRepository.findBasketByBasketOwnersUsername(username);
-        myBasket.getDirtyClothes().parallelStream().forEach(item -> {
-            item.setBasket(null);
-        });
+        myBasket.getDirtyClothes().parallelStream().forEach(item -> item.setBasket(null));
         basketRepository.save(myBasket);
     }
 }

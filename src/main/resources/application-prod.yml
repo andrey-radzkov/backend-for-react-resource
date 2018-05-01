@@ -4,6 +4,7 @@ dirty:
     clothes:
         notification:
             scheduling: 1800000
+            deviation: 60000
             enabled: true
 logging:
     level:

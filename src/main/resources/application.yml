@@ -13,6 +13,7 @@ dirty:
     clothes:
         notification:
             scheduling: 120000
+            deviation: 15000
             enabled: true
 security:
     oauth2:

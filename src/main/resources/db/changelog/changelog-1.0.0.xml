@@ -73,4 +73,24 @@
             <column name="token" type="varchar(1000)"/>
         </createTable>
     </changeSet>
+    <changeSet id="30.04.2018 20:27" author="a.radzkov">
+        <createTable tableName="user_options">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="receiver" type="BOOLEAN"/>
+            <column name="sender" type="BOOLEAN"/>
+        </createTable>
+        <addColumn tableName="users">
+            <column name="options_id" type="int"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="01.05.2018 11:09" author="a.radzkov">
+        <renameColumn oldColumnName="type" newColumnName="name" tableName="clothes_types"
+                      columnDataType="varchar(255)"/>
+        <insert tableName="clothes_types">
+            <column name="name">underwear</column>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
