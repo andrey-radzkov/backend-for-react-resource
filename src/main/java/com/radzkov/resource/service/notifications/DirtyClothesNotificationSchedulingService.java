@@ -7,6 +7,7 @@ import com.radzkov.resource.entity.Subscription;
 import com.radzkov.resource.entity.User;
 import com.radzkov.resource.repository.SubscriptionRepository;
 import com.radzkov.resource.repository.UserRepository;
+import com.radzkov.resource.service.LocalizationService;
 import de.bytefish.fcmjava.client.FcmClient;
 import de.bytefish.fcmjava.model.options.FcmMessageOptions;
 import de.bytefish.fcmjava.requests.data.DataMulticastMessage;
@@ -18,14 +19,17 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.UnsupportedEncodingException;
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -41,6 +45,8 @@ public class DirtyClothesNotificationSchedulingService {
     private final UserRepository userRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final DirtyClothesNotificationGroupingService notificationGroupingService;
+    private final LocalizationService localizationService;
+    private final MessageSource messageSource;
     private FcmClient fcmClient;
 
     @Value("${notification.domain:}")
@@ -91,14 +97,14 @@ public class DirtyClothesNotificationSchedulingService {
             LOG.info("Sending notification to " + receiver.getUsername() + " about " + typeCountForSender.getType().getName());
             fcmClient.send(fcmMessage);
             Thread.sleep(deviation);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | UnsupportedEncodingException e) {
             LOG.error(e);
         }
     }
 
 
-    private DataMulticastMessage buildNotification(List<String> tokens, TypeCountForSender type) {
-
+    private DataMulticastMessage buildNotification(List<String> tokens, TypeCountForSender type) throws UnsupportedEncodingException {
+//TODO: critical message if 0 clean
         FcmMessageOptions options = FcmMessageOptions.builder()
                 .setTimeToLive(Duration.ofHours(2))
                 .build();
@@ -106,7 +112,9 @@ public class DirtyClothesNotificationSchedulingService {
         notification.put("title", "IT Стирка");
         //TOdO: падежи и локализация
         //TODO: pictures
-        notification.put("body", "У " + type.getUser().getUsername() + " осталось всего " + type.getCount() + " чистых " + type.getType().getName());
+        //TODO: receiver localization
+        String body = localizationService.fixEncoding(messageSource.getMessage("dirty.clothes.notification." + type.getType().getName(), new Object[]{type.getUser().getUsername(), type.getCount()}, new Locale("ru")));
+        notification.put("body", body);
         notification.put("badge", "https://opt-936833.ssl.1c-bitrix-cdn.ru/upload/iblock/f81/f81e13000e39381d3a42d4bcc0840f9d.png");
         notification.put("tag", new Date().toString());
         notification.put("icon", "https://opt-936833.ssl.1c-bitrix-cdn.ru/upload/iblock/f81/f81e13000e39381d3a42d4bcc0840f9d.png");
