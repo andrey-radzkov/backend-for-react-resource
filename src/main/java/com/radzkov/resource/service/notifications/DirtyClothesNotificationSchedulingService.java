@@ -109,7 +109,7 @@ public class DirtyClothesNotificationSchedulingService {
                 .setTimeToLive(Duration.ofHours(2))
                 .build();
         Map<String, Object> notification = new HashMap<>();
-        notification.put("title", "IT Стирка");
+        notification.put("title", "Время стирки");
         //TOdO: падежи и локализация
         //TODO: pictures
         //TODO: receiver localization
