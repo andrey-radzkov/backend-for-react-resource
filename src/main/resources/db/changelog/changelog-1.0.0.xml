@@ -92,5 +92,29 @@
             <column name="name">underwear</column>
         </insert>
     </changeSet>
+    <changeSet id="01.05.2018 17:44" author="a.radzkov">
+        <update tableName="clothes_types">
+            <column name="img_src">/images/socks.png</column>
+            <where>name='socks'</where>
+        </update>
+        <update tableName="clothes_types">
+            <column name="img_src">/images/t-shirt.png</column>
+            <where>name='t-shirt'</where>
+        </update>
+        <update tableName="clothes_types">
+            <column name="img_src">/images/trousers.png</column>
+            <where>name='trousers'</where>
+        </update>
+        <update tableName="clothes_types">
+            <column name="img_src">/images/underwear.png</column>
+            <where>name='underwear'</where>
+        </update>
+    </changeSet>
+    <changeSet id="01.05.2018 17:48" author="a.radzkov">
+        <update tableName="clothes_types">
+            <column name="img_src">/images/others.png</column>
+            <where>name='others'</where>
+        </update>
+    </changeSet>
 
 </databaseChangeLog>

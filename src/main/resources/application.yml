@@ -15,6 +15,7 @@ dirty:
             scheduling: 120000
             deviation: 15000
             enabled: true
+            src-path: http://localhost:9000/resource
 security:
     oauth2:
         resource:

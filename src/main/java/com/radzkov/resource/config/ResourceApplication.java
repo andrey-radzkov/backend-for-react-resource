@@ -54,6 +54,7 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
         http.antMatcher("/**")
                 .authorizeRequests()
                 .antMatchers("/localization/*").permitAll()
+                .antMatchers("/static/**").permitAll()
                 .antMatchers("/**").access("#oauth2.hasScope('resource-read')")
         ;
     }

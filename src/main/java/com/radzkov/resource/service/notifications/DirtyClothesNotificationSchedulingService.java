@@ -55,6 +55,8 @@ public class DirtyClothesNotificationSchedulingService {
     private Boolean dirtyClothesNotificationEnabled;
     @Value("${dirty.clothes.notification.deviation:0}")
     private Integer deviation;
+    @Value("${dirty.clothes.notification.src-path}")
+    private String srcPath;
 
     @PostConstruct
     public void init() {
@@ -115,11 +117,11 @@ public class DirtyClothesNotificationSchedulingService {
         //TODO: receiver localization
         String body = localizationService.fixEncoding(messageSource.getMessage("dirty.clothes.notification." + type.getType().getName(), new Object[]{type.getUser().getUsername(), type.getCount()}, new Locale("ru")));
         notification.put("body", body);
-        notification.put("badge", "https://opt-936833.ssl.1c-bitrix-cdn.ru/upload/iblock/f81/f81e13000e39381d3a42d4bcc0840f9d.png");
+        String image = srcPath + type.getType().getImgSrc();
+        notification.put("badge", image);
         notification.put("tag", new Date().toString());
-        notification.put("icon", "https://opt-936833.ssl.1c-bitrix-cdn.ru/upload/iblock/f81/f81e13000e39381d3a42d4bcc0840f9d.png");
-        notification.put("image", "https://opt-936833.ssl.1c-bitrix-cdn.ru/upload/iblock/f81/f81e13000e39381d3a42d4bcc0840f9d.png");
-        notification.put("color", "#aa0000");
+        notification.put("icon", image);
+//        notification.put("image", image);
         notification.put("clickAction", notificationDomain + "/my-basket");
         notification.put("sound", notificationDomain + "/notificationSound.mp3");
         Map<String, String> data = new HashMap<>();
