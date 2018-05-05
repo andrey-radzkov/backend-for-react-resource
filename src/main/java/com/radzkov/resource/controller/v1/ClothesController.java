@@ -5,9 +5,12 @@ import com.radzkov.resource.entity.Basket;
 import com.radzkov.resource.entity.ClothesItem;
 import com.radzkov.resource.repository.BasketRepository;
 import com.radzkov.resource.repository.ClothesItemRepository;
+import com.radzkov.resource.repository.ClothesTypeRepository;
+import com.radzkov.resource.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,6 +28,8 @@ import java.util.List;
 public class ClothesController {
 
     private final ClothesItemRepository clothesItemRepository;
+    private final ClothesTypeRepository clothesTypeRepository;
+    private final UserRepository userRepository;
     private final BasketRepository basketRepository;
 
     @PutMapping("/put-clothes-to-basket")
@@ -35,6 +40,24 @@ public class ClothesController {
             clothesItem.setBasket(myBasket);
             clothesItemRepository.save(clothesItem);
         }
+    }
+
+    @DeleteMapping("/delete-clothes")
+    public void deleteClothes(@RequestBody @Valid TypeQuery type, @AuthenticationPrincipal String username) {
+        ClothesItem toDelete = clothesItemRepository.findFirstByOwnerUsernameAndTypeNameAndBasketIsNull(username, type.getName());
+        if (toDelete == null) {
+            throw new IllegalArgumentException("No Clean clothes to delete");
+        }
+        clothesItemRepository.delete(toDelete);
+    }
+
+    @PostMapping("/add-clothes")
+    public ClothesItem addClothes(@RequestBody @Valid TypeQuery type, @AuthenticationPrincipal String username) {
+        ClothesItem newItem = new ClothesItem();
+        newItem.setType(clothesTypeRepository.findFirstByName(type.getName()));
+        newItem.setOwner(userRepository.findUserByUsername(username));
+
+        return clothesItemRepository.save(newItem);
     }
 
     @GetMapping("/all-clothes")
