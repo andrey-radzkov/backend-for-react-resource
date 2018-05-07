@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -52,7 +53,7 @@ class DirtyClothesNotificationGroupingService {
             Map<ClothesType, Long> countByTypeAll = countOfClothesByType(sendersClothes);
             Map<ClothesType, Long> countByTypeDirty = countOfClothesByType(sendersDirtyClothes);
             Map<ClothesType, Long> countByTypeClean = new HashMap<>();
-            countByTypeAll.forEach((clothesType, count) -> countByTypeClean.put(clothesType, count - countByTypeDirty.get(clothesType)));
+            countByTypeAll.forEach((clothesType, count) -> countByTypeClean.put(clothesType, count - Optional.ofNullable(countByTypeDirty.get(clothesType)).orElse(0L)));
 
             countByTypeClean.forEach((type, count) -> {
                 //TODO: read from options

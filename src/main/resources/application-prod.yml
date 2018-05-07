@@ -1,11 +1,17 @@
 notification:
     domain: https://temp-react-for-heroku.herokuapp.com
+spring:
+    datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: ${JDBC_DATABASE_URL}
+        username: ${JDBC_DATABASE_USERNAME}
+        password: ${JDBC_DATABASE_PASSWORD}
 dirty:
     clothes:
         notification:
             scheduling: 1800000
             deviation: 60000
-            enabled: true
+            enabled: false
 logging:
     level:
         org:

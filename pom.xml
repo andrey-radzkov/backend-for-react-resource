@@ -123,7 +123,7 @@
                 <version>3.6.1</version>
                 <!--TODO: to property-->
                 <configuration>
-                    <changeLogFile>src/main/resources/db/changelogs.xml</changeLogFile>
+                    <changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>
                     <driver>com.mysql.jdbc.Driver</driver>
                     <url>jdbc:mysql://localhost/wash?useSSL=false</url>
                     <username>root</username>
