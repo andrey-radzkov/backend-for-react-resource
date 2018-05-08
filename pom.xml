@@ -132,6 +132,14 @@
                     <username>postgres</username>
                     <password>root</password>
                 </configuration>
+                <executions>
+                    <execution>
+                        <phase>release</phase>
+                        <goals>
+                            <goal>update</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <!--liquibase for heroku-->
             <plugin>
