@@ -34,10 +34,10 @@ spring:
     profiles:
         active: ${activeProfile}
     datasource:
-        driver-class-name: com.mysql.jdbc.Driver
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/wash
+        username: postgres
         password: root
-        url: jdbc:mysql://localhost/wash?useSSL=false
-        username: root
     jpa:
         database-platform: org.hibernate.dialect.MySQLDialect
         hibernate:
