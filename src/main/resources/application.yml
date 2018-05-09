@@ -29,7 +29,8 @@ server:
     contextPath: /resource
     port: 9000
 liquibase:
-    enabled: false
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
 spring:
     profiles:
         active: ${activeProfile}

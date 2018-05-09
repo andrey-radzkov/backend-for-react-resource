@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
 @EntityScan("com.radzkov.resource.entity")
 @ComponentScan("com.radzkov")
 public class ResourceApplication extends ResourceServerConfigurerAdapter {
-
+    //TODO: deploy to heroku with update in release phase, not in deploy
     @Value("${security.oauth2.resource.tokenInfoUri:}")
     private String tokenInfoUri; //TODO: remove log
 
