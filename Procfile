@@ -1,1 +1,1 @@
-release: java -jar target/dependency/liquibase.jar --changeLogFile=src/main/resources/db/changelog/db.changelog-master.xml --url=$JDBC_DATASOURCE_URL --username=$JDBC_DATASOURCE_USERNAME --password=$JDBC_DATASOURCE_PASSWORD --driver=org.postgresql.Driver  --classpath=target/dependency/postgres.jar update
+release: java -jar target/dependency/liquibase.jar --changeLogFile=src/main/resources/db/changelog/db.changelog-master.xml --url=$JDBC_DATASOURCE_URL --username=$JDBC_DATASOURCE_USERNAME --password=$JDBC_DATASOURCE_PASSWORD  --classpath=target/dependency/postgres.jar update
