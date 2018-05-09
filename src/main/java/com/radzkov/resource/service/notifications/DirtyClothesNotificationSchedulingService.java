@@ -74,7 +74,7 @@ public class DirtyClothesNotificationSchedulingService {
         //TODO: cover with integration tests
         //tODO: dynamic properties
         if (BooleanUtils.isTrue(dirtyClothesNotificationEnabled)) {
-            List<User> receivers = userRepository.findAllByUserOptionsReceiverIsTrue();
+            List<User> receivers = userRepository.findAllByUserOptionsReceiverIs(Boolean.TRUE);
             ListMultimap<User, User> sendersForReceiver = notificationGroupingService.findAllSendersForEachReceiver(receivers);
             ListMultimap<User, TypeCountForSender> groupedByType = notificationGroupingService.groupByDirtyClothesTypes(sendersForReceiver);
             sendNotificationsToReceivers(groupedByType);

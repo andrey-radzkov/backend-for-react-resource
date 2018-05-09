@@ -1,12 +1,9 @@
 package com.radzkov.resource.service.notifications;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.radzkov.resource.entity.Basket;
-import com.radzkov.resource.entity.User;
 import com.radzkov.resource.repository.SubscriptionRepository;
 import com.radzkov.resource.repository.UserRepository;
 import de.bytefish.fcmjava.client.FcmClient;
-import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +55,7 @@ public class DirtyClothesNotificationSchedulingServiceTest {
                 .thenReturn(ArrayListMultimap.create());
 
         notificationService.notifyAboutDirtyClothes();
-        Mockito.verify(userRepository, Mockito.times(1)).findAllByUserOptionsReceiverIsTrue();
+        Mockito.verify(userRepository, Mockito.times(1)).findAllByUserOptionsReceiverIs(any());
     }
 
     @Test
@@ -69,7 +66,7 @@ public class DirtyClothesNotificationSchedulingServiceTest {
         ReflectionUtils.setField(dirtyClothesNotificationEnabledField, notificationService, false);
         try {
             notificationService.notifyAboutDirtyClothes();
-            Mockito.verify(userRepository, Mockito.times(0)).findAllByUserOptionsReceiverIsTrue();
+            Mockito.verify(userRepository, Mockito.times(0)).findAllByUserOptionsReceiverIs(any());
         } finally {
             ReflectionUtils.setField(dirtyClothesNotificationEnabledField, notificationService, true);
         }

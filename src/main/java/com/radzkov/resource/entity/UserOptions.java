@@ -24,7 +24,7 @@ public class UserOptions {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column
-    private boolean receiver;
+    private Boolean receiver;
     @Column
-    private boolean sender;
+    private Boolean sender;
 }
