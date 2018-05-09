@@ -1,1 +1,1 @@
-release: java -jar target/dependency/liquibase.jar --changeLogFile=src/main/resources/db/changelog/db.changelog-master.xml --url=SPRING_DATASOURCE_URL --classpath=target/dependency/postgres.jar update
+release: java -jar target/dependency/liquibase.jar --changeLogFile=src/main/resources/db/changelog/db.changelog-master.xml --url=SPRING_DATASOURCE_URL --driver=org.postgresql.Driver  --classpath=target/dependency/postgres.jar update
