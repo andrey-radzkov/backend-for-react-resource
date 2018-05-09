@@ -55,7 +55,7 @@ public class DirtyClothesNotificationSchedulingServiceTest {
                 .thenReturn(ArrayListMultimap.create());
 
         notificationService.notifyAboutDirtyClothes();
-        Mockito.verify(userRepository, Mockito.times(1)).findAllByUserOptionsReceiverIs(any());
+        Mockito.verify(userRepository, Mockito.times(1)).findAllByUserOptionsReceiverIsTrue();
     }
 
     @Test
@@ -66,7 +66,7 @@ public class DirtyClothesNotificationSchedulingServiceTest {
         ReflectionUtils.setField(dirtyClothesNotificationEnabledField, notificationService, false);
         try {
             notificationService.notifyAboutDirtyClothes();
-            Mockito.verify(userRepository, Mockito.times(0)).findAllByUserOptionsReceiverIs(any());
+            Mockito.verify(userRepository, Mockito.times(0)).findAllByUserOptionsReceiverIsTrue();
         } finally {
             ReflectionUtils.setField(dirtyClothesNotificationEnabledField, notificationService, true);
         }
