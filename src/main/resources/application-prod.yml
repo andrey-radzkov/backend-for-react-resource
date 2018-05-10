@@ -1,5 +1,5 @@
 notification:
-    domain: https://temp-react-for-heroku.herokuapp.com
+    domain: https://time-to-wash-ui.herokuapp.com
 spring:
     datasource:
         url: ${JDBC_DATABASE_URL}
