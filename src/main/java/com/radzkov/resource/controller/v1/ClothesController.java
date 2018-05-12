@@ -76,11 +76,11 @@ public class ClothesController {
     }
 
     @PostMapping("/wash-clothes-in-basket")
-    public void washClothesInBasket(@AuthenticationPrincipal String username) {
+    public void washClothesInBasket(@RequestBody @Valid TypeQuery type, @AuthenticationPrincipal String username) {
         //TODO: read clothes types and count from query
         //TODO: уведомление о стирке другому владельцу корзины
-        Basket myBasket = basketRepository.findBasketByBasketOwnersUsername(username);
-        myBasket.getDirtyClothes().parallelStream().forEach(item -> item.setBasket(null));
-        basketRepository.save(myBasket);
+        List<ClothesItem> dirtyClothes = clothesItemRepository.findAllByOwnerUsernameAndTypeNameAndBasketIsNotNull(username, type.getName());
+        dirtyClothes.forEach(item -> item.setBasket(null));
+        clothesItemRepository.save(dirtyClothes);
     }
 }

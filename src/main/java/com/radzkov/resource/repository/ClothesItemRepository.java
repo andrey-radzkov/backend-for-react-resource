@@ -15,4 +15,6 @@ public interface ClothesItemRepository extends EntityRepository<ClothesItem> {
     List<ClothesItem> findAllByOwnerUsernameAndBasketIsNull(String username);
 
     ClothesItem findFirstByOwnerUsernameAndTypeNameAndBasketIsNull(String username, String type);
+
+    List<ClothesItem> findAllByOwnerUsernameAndTypeNameAndBasketIsNotNull(String username, String type);
 }
