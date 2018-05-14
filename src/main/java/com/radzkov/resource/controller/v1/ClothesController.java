@@ -3,6 +3,7 @@ package com.radzkov.resource.controller.v1;
 import com.radzkov.resource.dto.TypeQuery;
 import com.radzkov.resource.entity.Basket;
 import com.radzkov.resource.entity.ClothesItem;
+import com.radzkov.resource.entity.ClothesType;
 import com.radzkov.resource.repository.BasketRepository;
 import com.radzkov.resource.repository.ClothesItemRepository;
 import com.radzkov.resource.repository.ClothesTypeRepository;
@@ -60,14 +61,9 @@ public class ClothesController {
         return clothesItemRepository.save(newItem);
     }
 
-    @GetMapping("/all-clothes")
-    public List<ClothesItem> getAllClothes(@AuthenticationPrincipal String username) {
-        return clothesItemRepository.findAllByOwnerUsername(username);
-    }
-
-    @GetMapping("/clean-clothes")
-    public List<ClothesItem> getCleanClothes(@AuthenticationPrincipal String username) {
-        return clothesItemRepository.findAllByOwnerUsernameAndBasketIsNull(username);
+    @GetMapping("/all-types-with-count")
+    public List<ClothesType> getAllTypesWithCount(@AuthenticationPrincipal String username) {
+        return clothesTypeRepository.findAllWithAllAndDirtyCount(username);
     }
 
     @GetMapping("/my-basket")
