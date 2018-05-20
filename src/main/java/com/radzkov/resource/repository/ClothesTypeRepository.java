@@ -18,16 +18,12 @@ public interface ClothesTypeRepository extends EntityRepository<ClothesType> {
      * <p>
      * select t.id, t.name, t.img_src, count(i.type_id)as count_all, count(i.type_id)-count(i.basket_id) as count_dirty from clothes_types t
      * <p>
-     * left join clothes_items i on t.id=i.type_id
-     * left join users u on u.id=i.user_id
-     * where coalesce (u.username,'user')='user'
+     * left join clothes_items i on t.id=i.type_id and coalesce (i.user_id,'2')='2'
      * group by t.id;
      */
     @Query("select new ClothesType(type.id, type.name, type.imgSrc, count(item.type.id), count(item.type.id) - count(item.basket.id)) from ClothesType type " +
-            "left join type.clothesItems as item " +
-            "left join item.owner as owner " +
-            "where coalesce (owner.username, :username) = :username " +
-            "group by type.id")
-    List<ClothesType> findAllWithAllAndDirtyCount(@Param("username") String username);
+            "left join type.clothesItems as item with coalesce (item.owner.id, :userId) = :userId " +
+            "group by type.id order by type.id")
+    List<ClothesType> findAllWithAllAndDirtyCount(@Param("userId") Long userId);
 
 }

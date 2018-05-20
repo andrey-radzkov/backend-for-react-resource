@@ -4,6 +4,7 @@ import com.radzkov.resource.dto.TypeQuery;
 import com.radzkov.resource.entity.Basket;
 import com.radzkov.resource.entity.ClothesItem;
 import com.radzkov.resource.entity.ClothesType;
+import com.radzkov.resource.entity.User;
 import com.radzkov.resource.repository.BasketRepository;
 import com.radzkov.resource.repository.ClothesItemRepository;
 import com.radzkov.resource.repository.ClothesTypeRepository;
@@ -63,7 +64,8 @@ public class ClothesController {
 
     @GetMapping("/all-types-with-count")
     public List<ClothesType> getAllTypesWithCount(@AuthenticationPrincipal String username) {
-        return clothesTypeRepository.findAllWithAllAndDirtyCount(username);
+        User userByUsername = userRepository.findUserByUsername(username);
+        return clothesTypeRepository.findAllWithAllAndDirtyCount(userByUsername.getId());
     }
 
     @GetMapping("/my-basket")
