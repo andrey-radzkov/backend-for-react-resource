@@ -25,7 +25,6 @@ import javax.persistence.Table;
 @Setter
 @EqualsAndHashCode
 //TODO: save timezone
-//tODO: save options
 public class User {
     @Id
     @Column
