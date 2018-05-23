@@ -35,7 +35,7 @@ public class AccountController {
     @PostMapping("/save-user-settings")
     public void saveUserSettings(@RequestBody UserOptions userOptions, @AuthenticationPrincipal String username) {
         User currentUser = userRepository.findUserByUsername(username);
-        currentUser.setUserOptions(userOptions); //TODO: check id
+        currentUser.setUserOptions(userOptions);
         userRepository.save(currentUser);
     }
 
