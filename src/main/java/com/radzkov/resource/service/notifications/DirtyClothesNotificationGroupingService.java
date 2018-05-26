@@ -9,7 +9,9 @@ import com.radzkov.resource.repository.ClothesItemRepository;
 import com.radzkov.resource.repository.UserRepository;
 import com.radzkov.resource.service.notifications.DirtyClothesNotificationSchedulingService.TypeCountForSender;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -30,15 +32,21 @@ class DirtyClothesNotificationGroupingService {
     private static final int CRITICAL_MINIMUM = 2;
     private final UserRepository userRepository;
     private final ClothesItemRepository clothesItemRepository;
+    @Value("${dirty.clothes.notification.notify-receiver-about-his-clothes:}")
+    private Boolean notifyReceiverAboutHisClothes;
 
     //TODO: cover with integration test
     ListMultimap<User, User> findAllSendersForEachReceiver(List<User> receivers) {
         ListMultimap<User, User> receiverSenders = ArrayListMultimap.create();
-        receivers.parallelStream().forEach(user -> {
+        receivers.forEach(user -> {
             List<User> sendersForReceiver = userRepository
                     .findAllByBasketAndUserOptionsSenderIsTrueAndIdIsNot(user.getBasket(), user.getId());
-            //TODO: if option sent to me also add receiver here
             receiverSenders.putAll(user, sendersForReceiver);
+            //TODO: if option sent to me also add receiver here, refactor
+            if (BooleanUtils.isTrue(notifyReceiverAboutHisClothes)) {
+                receiverSenders.put(user, user);
+            }
+
         });
         return receiverSenders;
     }
@@ -57,12 +65,18 @@ class DirtyClothesNotificationGroupingService {
 
             countByTypeClean.forEach((type, count) -> {
                 //TODO: read from options
-                if (count <= CRITICAL_MINIMUM) {
+                if (needToNotify(countByTypeAll, type, count)) {
                     groupedByType.put(entry.getKey(), new TypeCountForSender(sender, type, count));
                 }
             });
         });
         return groupedByType;
+    }
+
+    private boolean needToNotify(Map<ClothesType, Long> countByTypeAll, ClothesType type, Long count) {
+        boolean lowRestWithBigCount = count <= CRITICAL_MINIMUM && countByTypeAll.get(type) > CRITICAL_MINIMUM;
+        boolean noRestWithSmallCount = count == 0 && countByTypeAll.get(type) <= CRITICAL_MINIMUM;
+        return lowRestWithBigCount || noRestWithSmallCount;
     }
 
     Map<ClothesType, Long> countOfClothesByType(List<ClothesItem> clothesItems) {
