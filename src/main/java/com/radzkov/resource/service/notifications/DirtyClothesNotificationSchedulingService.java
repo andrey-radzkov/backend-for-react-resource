@@ -115,7 +115,7 @@ public class DirtyClothesNotificationSchedulingService {
         //TOdO: падежи и локализация
         //TODO: pictures
         //TODO: receiver localization
-        String body = localizationService.fixEncoding(messageSource.getMessage("dirty.clothes.notification." + type.getType().getName(), new Object[]{type.getUser().getUsername(), type.getCount()}, new Locale("ru")));
+        String body = localizationService.fixEncoding(messageSource.getMessage("dirty.clothes.notification." + type.getType().getName(), new Object[]{type.getUser().getUsername(), type.getType().getCleanItemCount()}, new Locale("ru")));
         notification.put("body", body);
         String image = srcPath + type.getType().getImgSrc();
         notification.put("badge", image);
@@ -136,6 +136,5 @@ public class DirtyClothesNotificationSchedulingService {
     static class TypeCountForSender {
         private User user;
         private ClothesType type;
-        private long count;
     }
 }

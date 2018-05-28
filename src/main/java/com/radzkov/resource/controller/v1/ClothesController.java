@@ -75,7 +75,7 @@ public class ClothesController {
 
     @PostMapping("/wash-clothes-in-basket")
     public void washClothesInBasket(@RequestBody @Valid TypeQuery type, @AuthenticationPrincipal String username) {
-        //TODO: read clothes types and count from query
+        //TODO: read clothes types and countOfRestClean from query
         //TODO: уведомление о стирке другому владельцу корзины
         List<ClothesItem> dirtyClothes = clothesItemRepository.findAllByOwnerUsernameAndTypeNameAndBasketIsNotNull(username, type.getName());
         dirtyClothes.forEach(item -> item.setBasket(null));

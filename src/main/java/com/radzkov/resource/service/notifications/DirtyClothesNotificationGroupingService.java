@@ -5,7 +5,7 @@ import com.google.common.collect.ListMultimap;
 import com.radzkov.resource.entity.ClothesItem;
 import com.radzkov.resource.entity.ClothesType;
 import com.radzkov.resource.entity.User;
-import com.radzkov.resource.repository.ClothesItemRepository;
+import com.radzkov.resource.repository.ClothesTypeRepository;
 import com.radzkov.resource.repository.UserRepository;
 import com.radzkov.resource.service.notifications.DirtyClothesNotificationSchedulingService.TypeCountForSender;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -31,7 +28,8 @@ class DirtyClothesNotificationGroupingService {
     //TODO: extract to options
     private static final int CRITICAL_MINIMUM = 2;
     private final UserRepository userRepository;
-    private final ClothesItemRepository clothesItemRepository;
+    private final ClothesTypeRepository clothesTypeRepository;
+
     @Value("${dirty.clothes.notification.notify-receiver-about-his-clothes:}")
     private Boolean notifyReceiverAboutHisClothes;
 
@@ -54,28 +52,25 @@ class DirtyClothesNotificationGroupingService {
 
     ListMultimap<User, TypeCountForSender> groupByDirtyClothesTypes(ListMultimap<User, User> sendersForReceiver) {
         ListMultimap<User, TypeCountForSender> groupedByType = ArrayListMultimap.create();
-        sendersForReceiver.entries().parallelStream().forEach(entry -> {
+        sendersForReceiver.entries().forEach(entry -> {
             User sender = entry.getValue();
-            List<ClothesItem> sendersClothes = clothesItemRepository.findAllByOwnerUsername(sender.getUsername());
-            List<ClothesItem> sendersDirtyClothes = sendersClothes.parallelStream().filter(clothes -> Objects.nonNull(clothes.getBasket())).collect(Collectors.toList());
-            Map<ClothesType, Long> countByTypeAll = countOfClothesByType(sendersClothes);
-            Map<ClothesType, Long> countByTypeDirty = countOfClothesByType(sendersDirtyClothes);
-            Map<ClothesType, Long> countByTypeClean = new HashMap<>();
-            countByTypeAll.forEach((clothesType, count) -> countByTypeClean.put(clothesType, count - Optional.ofNullable(countByTypeDirty.get(clothesType)).orElse(0L)));
+            List<ClothesType> typesWithAllAndDirtyCount = clothesTypeRepository.findAllWithAllAndDirtyCount(sender.getId());
 
-            countByTypeClean.forEach((type, count) -> {
+            typesWithAllAndDirtyCount.forEach(type -> {
                 //TODO: read from options
-                if (needToNotify(countByTypeAll, type, count)) {
-                    groupedByType.put(entry.getKey(), new TypeCountForSender(sender, type, count));
+                if (needToNotify(type)) {
+                    groupedByType.put(entry.getKey(), new TypeCountForSender(sender, type));
                 }
             });
         });
         return groupedByType;
     }
 
-    private boolean needToNotify(Map<ClothesType, Long> countByTypeAll, ClothesType type, Long count) {
-        boolean lowRestWithBigCount = count <= CRITICAL_MINIMUM && countByTypeAll.get(type) > CRITICAL_MINIMUM;
-        boolean noRestWithSmallCount = count == 0 && countByTypeAll.get(type) <= CRITICAL_MINIMUM;
+    private boolean needToNotify(ClothesType type) {
+        boolean lowRestWithBigCount = type.getCleanItemCount() <= CRITICAL_MINIMUM && type.getAllItemCount() > CRITICAL_MINIMUM;
+        boolean noRestWithSmallCount = type.getCleanItemCount() == 0
+                && type.getAllItemCount() <= CRITICAL_MINIMUM
+                && type.getAllItemCount() != 0;
         return lowRestWithBigCount || noRestWithSmallCount;
     }
 
