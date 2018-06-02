@@ -1,5 +1,6 @@
 package com.radzkov.resource.controller.v1;
 
+import com.radzkov.resource.entity.Basket;
 import com.radzkov.resource.entity.User;
 import com.radzkov.resource.entity.UserOptions;
 import com.radzkov.resource.repository.UserRepository;
@@ -48,6 +49,7 @@ public class AccountController {
     private void saveNewUser(String username) {
         User user = new User();
         user.setUsername(username);
+        user.setBasket(new Basket());
         userRepository.save(user);
     }
 }

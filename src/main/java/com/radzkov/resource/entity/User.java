@@ -35,7 +35,7 @@ public class User {
     @Column
     private String username;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "basket_id")
     @JsonIgnore
     private Basket basket;
