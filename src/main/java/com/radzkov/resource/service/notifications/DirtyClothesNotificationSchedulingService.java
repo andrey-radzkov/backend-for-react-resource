@@ -123,7 +123,7 @@ public class DirtyClothesNotificationSchedulingService {
         notification.put("icon", image);
 //        notification.put("image", image);
         notification.put("clickAction", notificationDomain + "/my-basket");
-        notification.put("sound", notificationDomain + "/notificationSound.mp3");
+        notification.put("sound", notificationDomain + "/app/notificationSound.mp3");
         Map<String, String> data = new HashMap<>();
         data.put("action", notificationDomain + "/my-basket");
         notification.put("data", data);
