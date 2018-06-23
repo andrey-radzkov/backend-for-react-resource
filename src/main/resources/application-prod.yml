@@ -9,9 +9,10 @@ spring:
 dirty:
     clothes:
         notification:
-            scheduling: 1800000
+            scheduling: 120000
             deviation: 60000
             enabled: true
+            src-path: https://backend-for-react-resource.herokuapp.com/resource
 logging:
     level:
         org:
