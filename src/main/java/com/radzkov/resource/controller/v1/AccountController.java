@@ -55,9 +55,9 @@ public class AccountController {
     public void saveReceiver(@RequestParam String receiverUsername, @AuthenticationPrincipal String username) {
         User currentUser = userRepository.findUserByUsername(username);
         User receiver = userRepository.findUserByUsername(receiverUsername);
-        Basket receiversBasket = receiver.getBasket();
         //TODO: validate if user already in application
-        if (receiversBasket != null && BooleanUtils.isTrue(receiver.getUserOptions().getReceiver())) {
+        if (receiver != null && BooleanUtils.isTrue(receiver.getUserOptions().getReceiver())) {
+            Basket receiversBasket = receiver.getBasket();
             currentUser.setBasket(receiversBasket);
             userRepository.save(currentUser);
         }
