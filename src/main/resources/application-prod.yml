@@ -11,7 +11,7 @@ dirty:
         notification:
             scheduling: 1800000
             deviation: 60000
-            enabled: false
+            enabled: true
 logging:
     level:
         org:
