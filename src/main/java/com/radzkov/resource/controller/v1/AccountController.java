@@ -1,20 +1,23 @@
 package com.radzkov.resource.controller.v1;
 
+import com.radzkov.resource.entity.Basket;
+import com.radzkov.resource.entity.User;
+import com.radzkov.resource.entity.UserOptions;
+import com.radzkov.resource.repository.BasketRepository;
+import com.radzkov.resource.repository.UserRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.radzkov.resource.entity.Basket;
-import com.radzkov.resource.entity.User;
-import com.radzkov.resource.entity.UserOptions;
-import com.radzkov.resource.repository.UserRepository;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
+import java.util.List;
 
 /**
  * @author Radzkov Andrey
@@ -25,6 +28,7 @@ import lombok.AllArgsConstructor;
 public class AccountController {
 
     private UserRepository userRepository;
+    private BasketRepository basketRepository;
 
     @ApiOperation(value = "Registers user on login via social if this login is first and no user with this username exists")
     @GetMapping("/register-if-necessary")
@@ -46,6 +50,32 @@ public class AccountController {
         userRepository.save(currentUser);
     }
 
+    //TODO: rename tp receiverUsername
+    @PostMapping("/save-receiver")
+    public void saveReceiver(@RequestParam String receiverId, @AuthenticationPrincipal String username) {
+        User currentUser = userRepository.findUserByUsername(username);
+        User receiver = userRepository.findUserByUsername(receiverId);
+        Basket receiversBasket = basketRepository.findBasketByBasketOwnersUsername(receiverId);
+        //TODO: validate if user already in application
+        if (receiversBasket != null && BooleanUtils.isTrue(receiver.getUserOptions().getReceiver())) {
+            currentUser.setBasket(receiversBasket);
+            userRepository.save(currentUser);
+        }
+    }
+
+    @PostMapping("/save-senders")
+    public void saveSenders(@RequestParam List<String> senderIds, @AuthenticationPrincipal String username) {
+        Basket currentBasket = basketRepository.findBasketByBasketOwnersUsername(username);
+        List<User> senders = userRepository.findAllByUsernameIn(senderIds);
+        //TODO: validate if user already in application and receiver
+        senders.forEach(sender -> {
+            if (BooleanUtils.isTrue(sender.getUserOptions().getSender())) {
+                sender.setBasket(currentBasket);
+                userRepository.save(sender);
+            }
+        });
+    }
+
 
     private boolean isUserNotExists(String username) {
         User userByUsername = userRepository.findUserByUsername(username);
@@ -55,7 +85,8 @@ public class AccountController {
     private void saveNewUser(String username) {
         User user = new User();
         user.setUsername(username);
-        user.setBasket(new Basket());
+        Basket basket = basketRepository.save(new Basket());
+        user.setBasket(basket);
         userRepository.save(user);
     }
 }

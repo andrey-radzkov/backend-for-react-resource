@@ -11,6 +11,10 @@ import java.util.List;
  */
 public interface UserRepository extends EntityRepository<User> {
     User findUserByUsername(String username);
+
+    List<User> findAllByUsernameIn(List<String> username);
+
     List<User> findAllByUserOptionsReceiverIsTrue();
+
     List<User> findAllByBasketAndUserOptionsSenderIsTrueAndIdIsNot(Basket basket, Long id);
 }
