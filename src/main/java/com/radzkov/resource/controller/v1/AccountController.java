@@ -52,10 +52,10 @@ public class AccountController {
 
     //TODO: rename tp receiverUsername
     @PostMapping("/save-receiver")
-    public void saveReceiver(@RequestParam String receiverId, @AuthenticationPrincipal String username) {
+    public void saveReceiver(@RequestParam String receiverUsername, @AuthenticationPrincipal String username) {
         User currentUser = userRepository.findUserByUsername(username);
-        User receiver = userRepository.findUserByUsername(receiverId);
-        Basket receiversBasket = basketRepository.findBasketByBasketOwnersUsername(receiverId);
+        User receiver = userRepository.findUserByUsername(receiverUsername);
+        Basket receiversBasket = receiver.getBasket();
         //TODO: validate if user already in application
         if (receiversBasket != null && BooleanUtils.isTrue(receiver.getUserOptions().getReceiver())) {
             currentUser.setBasket(receiversBasket);
@@ -64,9 +64,9 @@ public class AccountController {
     }
 
     @PostMapping("/save-senders")
-    public void saveSenders(@RequestParam List<String> senderIds, @AuthenticationPrincipal String username) {
+    public void saveSenders(@RequestParam List<String> senderUsernames, @AuthenticationPrincipal String username) {
         Basket currentBasket = basketRepository.findBasketByBasketOwnersUsername(username);
-        List<User> senders = userRepository.findAllByUsernameIn(senderIds);
+        List<User> senders = userRepository.findAllByUsernameIn(senderUsernames);
         //TODO: validate if user already in application and receiver
         senders.forEach(sender -> {
             if (BooleanUtils.isTrue(sender.getUserOptions().getSender())) {
