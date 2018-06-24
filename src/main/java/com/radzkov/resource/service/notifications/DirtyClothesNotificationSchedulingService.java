@@ -115,6 +115,7 @@ public class DirtyClothesNotificationSchedulingService {
         //TOdO: падежи и локализация
         //TODO: pictures
         //TODO: receiver localization
+        //TODO: username for user
         String body = localizationService.fixEncoding(messageSource.getMessage("dirty.clothes.notification." + type.getType().getName(), new Object[]{type.getUser().getUsername(), type.getType().getCleanItemCount()}, new Locale("ru")));
         notification.put("body", body);
         String image = srcPath + type.getType().getImgSrc();
@@ -122,10 +123,10 @@ public class DirtyClothesNotificationSchedulingService {
         notification.put("tag", new Date().toString());
         notification.put("icon", image);
 //        notification.put("image", image);
-        notification.put("clickAction", notificationDomain + "/my-basket");
+        notification.put("clickAction", notificationDomain + "/app/my-basket");
         notification.put("sound", notificationDomain + "/app/notificationSound.mp3");
         Map<String, String> data = new HashMap<>();
-        data.put("action", notificationDomain + "/my-basket");
+        data.put("action", notificationDomain + "/app/my-basket");
         notification.put("data", data);
         return new DataMulticastMessage(options, tokens, notification);
     }
