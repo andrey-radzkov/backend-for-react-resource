@@ -1,7 +1,10 @@
 package com.radzkov.resource.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -9,35 +12,34 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
 
 /**
  * @author Radzkov Andrey
  */
 @Entity
-@Table(name = "clothes_items")
+@Table(name = "notification_types")
 @Getter
 @Setter
-public class ClothesItem {
+@EqualsAndHashCode
+@NoArgsConstructor
+@RequiredArgsConstructor
+public class NotificationType {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NonNull
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User owner;
+    @NonNull
+    @NotNull
+    @Column
+    private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "type_id")
-    private ClothesType type;
-
-    @ManyToOne
-    @JoinColumn(name = "basket_id")
-    @JsonIgnore
-    private Basket basket;
+    @NonNull
+    @Column
+    private String imgSrc;
 
 }

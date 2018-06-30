@@ -1,7 +1,6 @@
 package com.radzkov.resource.repository;
 
 
-import com.radzkov.resource.entity.Basket;
 import com.radzkov.resource.entity.User;
 
 import java.util.List;
@@ -11,10 +10,4 @@ import java.util.List;
  */
 public interface UserRepository extends EntityRepository<User> {
     User findUserByUsername(String username);
-
-    List<User> findAllByUsernameIn(List<String> username);
-
-    List<User> findAllByUserOptionsReceiverIsTrue();
-
-    List<User> findAllByBasketAndUserOptionsSenderIsTrueAndIdIsNot(Basket basket, Long id);
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+    <changeSet id="30.06.2018 19:32" author="a.radzkov">
+        <dropTable tableName="user_options"/>
+        <dropTable tableName="basket"/>
+        <dropColumn tableName="clothes_items" columnName="basket_id"/>
+        <dropColumn tableName="users" columnName="basket_id"/>
+        <dropColumn tableName="users" columnName="options_id"/>
+        <renameTable oldTableName="clothes_types" newTableName="notification_types"/>
+        <renameTable oldTableName="clothes_items" newTableName="notification_items"/>
+        <addColumn tableName="notification_items">
+            <column name="receiver_id" type="int"/>
+        </addColumn>
+    </changeSet>
+
+
+</databaseChangeLog>

@@ -1,38 +1,40 @@
 package com.radzkov.resource.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.List;
 
 /**
  * @author Radzkov Andrey
  */
 @Entity
-@Table
+@Table(name = "notification_items")
 @Getter
 @Setter
-public class Basket {
+public class NotificationItem {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "basket", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JsonIgnore
-    private List<User> basketOwners;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User owner;
 
-    @OneToMany(mappedBy = "basket", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<ClothesItem> dirtyClothes;
+    @ManyToOne
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
 
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private NotificationType type;
 
 }

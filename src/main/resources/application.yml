@@ -15,7 +15,6 @@ dirty:
             scheduling: 120000
             deviation: 15000
             enabled: true
-            notify-receiver-about-his-clothes: true
             src-path: http://localhost:9000/resource
 security:
     oauth2:
